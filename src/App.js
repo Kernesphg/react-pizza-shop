@@ -9,6 +9,7 @@ import { Route, Routes } from 'react-router-dom';
 export const SearchContext = React.createContext();
 
 function App() {
+  console.log('APP');
   const [searchValue, setSearchValue] = React.useState('');
   return (
     <SearchContext.Provider value={{ searchValue, setSearchValue }}>

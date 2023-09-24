@@ -5,16 +5,22 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Paginate from '../components/Paginate';
 
+import { setTypeCategory } from '../redux/slices/filterSlice';
+import { useSelector, useDispatch } from 'react-redux';
+
 function Home({ searchValue }) {
+  console.log('HOME');
   const [pizzas, setPizzas] = React.useState([]);
   const [loadingStatus, setLoadingStatus] = React.useState(true);
-  const [categoryType, setCategoryType] = React.useState(0);
   const [selectedPage, setSelectedPage] = React.useState(1);
   const [sortTypeObj, setSortTypeObj] = React.useState({
     name: 'популярности',
     sortType: 'rating',
   });
   const [orderType, setOrderType] = React.useState(true);
+
+  const categoryType = useSelector((state) => state.filter.type);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     setLoadingStatus(true);
@@ -35,7 +41,9 @@ function Home({ searchValue }) {
       <div className="content__top">
         <Categories
           categoryType={categoryType}
-          onChangeCategory={(index) => setCategoryType(index)}
+          onChangeCatehory={(index) => dispatch(setTypeCategory(index))}
+          // categoryType={categoryType}
+          // onChangeCategory={(index) => setCategoryType(index)}
         />
         <Sort
           sortTypeObj={sortTypeObj}
