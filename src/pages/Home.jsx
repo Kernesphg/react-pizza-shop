@@ -5,52 +5,36 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Paginate from '../components/Paginate';
 
-import { setTypeCategory } from '../redux/slices/filterSlice';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function Home({ searchValue }) {
-  console.log('HOME');
+  const categoryType = useSelector((state) => state.filter.categoryType);
+  const sortType = useSelector((state) => state.filter.sortTypeObj);
+  const orderType = useSelector((state) => state.filter.orderType);
+
   const [pizzas, setPizzas] = React.useState([]);
   const [loadingStatus, setLoadingStatus] = React.useState(true);
   const [selectedPage, setSelectedPage] = React.useState(1);
-  const [sortTypeObj, setSortTypeObj] = React.useState({
-    name: 'популярности',
-    sortType: 'rating',
-  });
-  const [orderType, setOrderType] = React.useState(true);
-
-  const categoryType = useSelector((state) => state.filter.type);
-  const dispatch = useDispatch();
 
   React.useEffect(() => {
     setLoadingStatus(true);
     fetch(
       `https://64ff4768f8b9eeca9e29f003.mockapi.io/items?page=${selectedPage}&limit=8&${
         categoryType > 0 ? 'category=' + categoryType : ''
-      }&sortBy=${sortTypeObj.sortType}&order=${orderType ? 'desc' : 'ask'}`,
+      }&sortBy=${sortType.sortType}&order=${orderType ? 'desc' : 'ask'}`,
     )
       .then((res) => res.json())
       .then((json) => {
         setLoadingStatus(false);
         setPizzas(json);
       });
-  }, [categoryType, sortTypeObj, orderType, selectedPage]);
+  }, [categoryType, sortType, orderType, selectedPage]);
 
   return (
     <div>
       <div className="content__top">
-        <Categories
-          categoryType={categoryType}
-          onChangeCatehory={(index) => dispatch(setTypeCategory(index))}
-          // categoryType={categoryType}
-          // onChangeCategory={(index) => setCategoryType(index)}
-        />
-        <Sort
-          sortTypeObj={sortTypeObj}
-          onChangeSort={(obj) => setSortTypeObj(obj)}
-          orderType={orderType}
-          onChangeOrder={(order) => setOrderType(order)}
-        />
+        <Categories />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
